@@ -1,4 +1,4 @@
-/* ±âÁ¸ µ¥ÀÌÅÍ Áö¿ì±â (±âÁ¸½ÃÄö½º°¡ ÀÖ´Ù¸é Ãß°¡·Î Áö¿öÁÖ¼¼¿ä drop sequence midx_seq;  ÀüÃ¼ µå·¡±× ÈÄ sql ºÙ¿©³Ö±â*/
+/* ê¸°ì¡´ ë°ì´í„° ì§€ìš°ê¸° (ê¸°ì¡´ì‹œí€€ìŠ¤ê°€ ìˆë‹¤ë©´ ì¶”ê°€ë¡œ ì§€ì›Œì£¼ì„¸ìš” drop sequence midx_seq;  íŒŒíŠ¸ë³„ë¡œ ëŠì–´ì„œ ë“œë˜ê·¸ í›„ sql ë¶™ì—¬ë„£ê¸°*/
 
 drop table members;
 drop table orders;
@@ -91,21 +91,21 @@ CREATE TABLE PRODUCT (
     Pname varchar(20) NOT NULL, /* Pname */
     Ptype number NOT NULL, /* Ptype */
     Price varchar(20) NULL, /* Price */
-    Price2 varchar(20) NULL, /* ÇÒÀÎµÈ°¡°İ */
+    Price2 varchar(20) NULL, /* í• ì¸ëœê°€ê²© */
     PArea varchar(20) NULL /* PArea */
     );
     
 /* Cart */
 CREATE TABLE CATEGORY (
 	ptype NUMBER NOT NULL, /* caidx */
-	CATE1 varchar(20) NOT NULL, /* ´ëºĞ·ù */
-	CATE2 varchar(20) NOT NULL, /* ¼ÒºĞ·ù */
+	CATE1 varchar(20) NOT NULL, /* ëŒ€ë¶„ë¥˜ */
+	CATE2 varchar(20) NOT NULL, /* ì†Œë¶„ë¥˜ */
 	delYn char(1) NULL, /* delYn  */
 	cawriteday date NULL /* category writeday */
 );    /*  ptype = 1 CATE1 = furniture CATE2 = table */
 
 
-/* writeday SYSDATE ·Î ÁöÁ¤ÇÏ±â */
+/* writeday SYSDATE ë¡œ ì§€ì •í•˜ê¸° */
 alter table notice modify nwriteday default sysdate;
 alter table qna modify qwriteday default sysdate;
 alter table review modify rwriteday default sysdate;
@@ -113,58 +113,58 @@ alter table orders modify owriteday default sysdate;
 alter table cart modify cwriteday default sysdate;
 
 
---members Å×ÀÌºí¿¡ midx¸¦ primary key·Î ÁöÁ¤ÇÏ±â
+--members í…Œì´ë¸”ì— midxë¥¼ primary keyë¡œ ì§€ì •í•˜ê¸°
 alter table members
 add constraint msidx_pk primary key(midx);
 
---order Å×ÀÌºí¿¡ oidx¸¦ primary key·Î ÁöÁ¤ÇÏ±â
+--order í…Œì´ë¸”ì— oidxë¥¼ primary keyë¡œ ì§€ì •í•˜ê¸°
 alter table orders
 add constraint oidx_pk primary key(oidx);
 
---review Å×ÀÌºí¿¡ ridx¸¦ primary key·Î ÁöÁ¤ÇÏ±â
+--review í…Œì´ë¸”ì— ridxë¥¼ primary keyë¡œ ì§€ì •í•˜ê¸°
 alter table review
 add constraint ridx_pk primary key(ridx);
 
---qna Å×ÀÌºí¿¡ qidx¸¦ primary key·Î ÁöÁ¤ÇÏ±â
+--qna í…Œì´ë¸”ì— qidxë¥¼ primary keyë¡œ ì§€ì •í•˜ê¸°
 alter table qna
 add constraint qidx_pk primary key(qidx);
 
---notice Å×ÀÌºí¿¡ nidx¸¦ primary key·Î ÁöÁ¤ÇÏ±â
+--notice í…Œì´ë¸”ì— nidxë¥¼ primary keyë¡œ ì§€ì •í•˜ê¸°
 alter table notice
 add constraint nidx_pk primary key(nidx);
 
---cart Å×ÀÌºí¿¡ cidx¸¦ primary key·Î ÁöÁ¤ÇÏ±â
+--cart í…Œì´ë¸”ì— cidxë¥¼ primary keyë¡œ ì§€ì •í•˜ê¸°
 alter table cart
 add constraint cidx_pk primary key(cidx);
 
---product Å×ÀÌºí¿¡ pidx¸¦ primary key·Î ÁöÁ¤ÇÏ±â
+--product í…Œì´ë¸”ì— pidxë¥¼ primary keyë¡œ ì§€ì •í•˜ê¸°
 alter table product
 add constraint pidx_pk primary key(pidx);
 
---category Å×ÀÌºí¿¡ ptype¸¦ primary key·Î ÁöÁ¤ÇÏ±â
+--category í…Œì´ë¸”ì— ptypeë¥¼ primary keyë¡œ ì§€ì •í•˜ê¸°
 alter table category
 add constraint ptype_pk primary key(ptype);
 
---midx ¿Ü·¡Å°(foreign key) ÁöÁ¤ÇÏ±â
+--midx ì™¸ë˜í‚¤(foreign key) ì§€ì •í•˜ê¸°
 alter table cart add constraint midx_fk1 foreign key(midx) references members(midx); 
 alter table orders add constraint midx_fk2 foreign key(midx) references members(midx);
 alter table review add constraint midx_fk3 foreign key(midx) references members(midx);
 alter table qna add constraint midx_fk4 foreign key(midx) references members(midx);
 alter table notice add constraint midx_fk5 foreign key(midx) references members(midx);
 
---pidx ¿Ü·¡Å° ÁöÁ¤ÇÏ±â
+--pidx ì™¸ë˜í‚¤ ì§€ì •í•˜ê¸°
 alter table orders add constraint pidx_fk1 foreign key(pidx) references product(pidx);
 alter table cart add constraint pidx_fk2 foreign key(pidx) references product(pidx);
 
---ptype ¿Ü·¡Å° ÁöÁ¤ÇÏ±â
+--ptype ì™¸ë˜í‚¤ ì§€ì •í•˜ê¸°
 alter table product add constraint ptype_fk1 foreign key(ptype) references category(ptype);
 
---midx ½ÃÄö½º ¸¸µé±â (½ÃÄö½º´Â seq.xxx·Î ÅëÀÏ)
+--midx ì‹œí€€ìŠ¤ ë§Œë“¤ê¸° (ì‹œí€€ìŠ¤ëŠ” seq.xxxë¡œ í†µì¼)
 create sequence seq_midx
 increment by 1
 start with 2;
 
-/* midx=1 Àº 'admin'À¸·Î ÀÔ·Â */
+/* midx=1 ì€ 'admin'ìœ¼ë¡œ ì…ë ¥ */
 insert into members (Midx,MemberId,MemberPwd,MemberName,MemberEmail,MemberBirth,MemberPnum) values(1,'admin','1111','DEMOOD','demood@naver.com','20/06/17','010-1111-1111');
 
 create sequence seq_oidx
