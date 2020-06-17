@@ -1,0 +1,192 @@
+/* 기존 데이터 지우기 (기존시퀀스가 있다면 추가로 지워주세요 drop sequence midx_seq;  전체 드래그 후 sql 붙여넣기*/
+
+drop table members;
+drop table orders;
+drop table review;
+drop table qna;
+drop table notice;
+drop table cart;
+drop table product;
+
+
+/* Member */
+CREATE TABLE MEMBERS (
+	Midx NUMBER NOT NULL, /* Midx */
+	MemberId VARCHAR(20) NOT NULL, /* memberId */
+	MemberPwd VARCHAR(20) NOT NULL, /* memberPwd */
+	MemberName VARCHAR(20) NOT NULL, /* memberName */
+	MemberEmail VARCHAR(50) NULL, /* memberEmail */
+	MemberPnum VARCHAR(20) NULL, /* memberPnum */
+	MemberBirth DATE NULL /* memberBirth */
+);
+
+/* Orders */
+CREATE TABLE ORDERS (
+	Oidx NUMBER NOT NULL, /* Oidx */
+	Adress VARCHAR(50) NOT NULL, /* Adress */
+	Owriteday date null, /* Owriteday */
+	CNT NUMBER NULL, /* CNT */
+	Midx NUMBER NOT NULL, /* Midx */
+	Pidx NUMBER NOT NULL, /* Pidx */
+    Price varchar(20) NULL, /* price */
+    Pname varchar(20) NULL /* pname */
+);
+
+/* Review */
+CREATE TABLE REVIEW (
+	Ridx NUMBER NOT NULL, /* Ridx */
+	Rsubject VARCHAR(50) NOT NULL, /* Rsubject */
+	Rcontents VARCHAR(200) NOT NULL, /* Rcontents */
+	Rwriter VARCHAR(20) NOT NULL, /* Rwriteday */
+	Rviews NUMBER NULL, /* Rviews */
+	Rstars NUMBER NOT NULL, /* Rwriter */
+	Rwriteday DATE NULL, /* Rstars */
+	RdelYn CHAR(1) NULL, /* RdelYn */
+	Midx NUMBER NOT NULL, /* Midx */
+	MemberPwd VARCHAR(20) NOT NULL /* memberPwd */
+);
+
+/* Qna */
+CREATE TABLE QNA (
+	Qidx NUMBER NOT NULL, /* Qidx */
+	Qsubject varchar(20) NOT NULL, /* Qsubject */
+	Qcontents VARCHAR(200) NOT NULL, /* Qcontents */
+	Qwriter VARCHAR(20) NOT NULL, /* Qwriter */
+	Qwriteday DATE NULL, /* Qwriteday */
+	QsecYn CHAR(1) NULL, /* QsecYn */
+	Qviews NUMBER NULL, /* Qviews */
+	OrginQidx NUMBER NOT NULL, /* OrginQidx */
+	Updown NUMBER NULL, /* Updown */
+	QdelYn CHAR(1) NULL, /* QdelYn */
+	Midx NUMBER NOT NULL, /* Midx */
+	MemberPwd VARCHAR(20) NOT NULL /* memberPwd */
+);
+
+/* Notice */
+CREATE TABLE NOTICE (
+	Nidx NUMBER NOT NULL, /* Nidx */
+	Nsubject VARCHAR(50) NOT NULL, /* Nsubject */
+	Ncontents VARCHAR(200) NOT NULL, /* Ncontents */
+	Nwriter VARCHAR(20) NOT NULL, /* Nwriter */
+	Nwriteday DATE NULL, /* Nwriteday */
+	Nviews NUMBER NULL, /* Nviews */
+    NdelYn char(1) NULL, /* NelYn */
+	Midx NUMBER NOT NULL /* Midx */
+);
+
+/* Cart */
+CREATE TABLE CART (
+	Cidx NUMBER NOT NULL, /* Cidx */
+	Cwriteday DATE NULL, /* Cwriteday */
+	CNT NUMBER NULL, /* CNT */
+	Pidx NUMBER NOT NULL, /* Pidx */
+	Midx NUMBER NOT NULL, /* Midx */
+    Price varchar(20) NULL, /* price */
+    Pname varchar(20) NULL /* pname */
+);
+
+/* Product */
+CREATE TABLE PRODUCT (
+    Pidx NUMBER NOT NULL, /* Pidx */
+    Pname varchar(20) NOT NULL, /* Pname */
+    Ptype number NOT NULL, /* Ptype */
+    Price varchar(20) NULL, /* Price */
+    Price2 varchar(20) NULL, /* 할인된가격 */
+    PArea varchar(20) NULL /* PArea */
+    );
+    
+/* Cart */
+CREATE TABLE CATEGORY (
+	ptype NUMBER NOT NULL, /* caidx */
+	CATE1 varchar(20) NOT NULL, /* 대분류 */
+	CATE2 varchar(20) NOT NULL, /* 소분류 */
+	delYn char(1) NULL, /* delYn  */
+	cawriteday date NULL /* category writeday */
+);    /*  ptype = 1 CATE1 = furniture CATE2 = table */
+
+
+/* writeday SYSDATE 로 지정하기 */
+alter table notice modify nwriteday default sysdate;
+alter table qna modify qwriteday default sysdate;
+alter table review modify rwriteday default sysdate;
+alter table orders modify owriteday default sysdate;
+alter table cart modify cwriteday default sysdate;
+
+
+--members 테이블에 midx를 primary key로 지정하기
+alter table members
+add constraint msidx_pk primary key(midx);
+
+--order 테이블에 oidx를 primary key로 지정하기
+alter table orders
+add constraint oidx_pk primary key(oidx);
+
+--review 테이블에 ridx를 primary key로 지정하기
+alter table review
+add constraint ridx_pk primary key(ridx);
+
+--qna 테이블에 qidx를 primary key로 지정하기
+alter table qna
+add constraint qidx_pk primary key(qidx);
+
+--notice 테이블에 nidx를 primary key로 지정하기
+alter table notice
+add constraint nidx_pk primary key(nidx);
+
+--cart 테이블에 cidx를 primary key로 지정하기
+alter table cart
+add constraint cidx_pk primary key(cidx);
+
+--product 테이블에 pidx를 primary key로 지정하기
+alter table product
+add constraint pidx_pk primary key(pidx);
+
+--category 테이블에 ptype를 primary key로 지정하기
+alter table category
+add constraint ptype_pk primary key(ptype);
+
+--midx 외래키(foreign key) 지정하기
+alter table cart add constraint midx_fk1 foreign key(midx) references members(midx); 
+alter table orders add constraint midx_fk2 foreign key(midx) references members(midx);
+alter table review add constraint midx_fk3 foreign key(midx) references members(midx);
+alter table qna add constraint midx_fk4 foreign key(midx) references members(midx);
+alter table notice add constraint midx_fk5 foreign key(midx) references members(midx);
+
+--pidx 외래키 지정하기
+alter table orders add constraint pidx_fk1 foreign key(pidx) references product(pidx);
+alter table cart add constraint pidx_fk2 foreign key(pidx) references product(pidx);
+
+--ptype 외래키 지정하기
+alter table product add constraint ptype_fk1 foreign key(ptype) references category(ptype);
+
+--midx 시퀀스 만들기 (시퀀스는 seq.xxx로 통일)
+create sequence seq_midx
+increment by 1
+start with 2;
+
+/* midx=1 은 'admin'으로 입력 */
+insert into members (Midx,MemberId,MemberPwd,MemberName,MemberEmail,MemberBirth,MemberPnum) values(1,'admin','1111','DEMOOD','demood@naver.com','20/06/17','010-1111-1111');
+
+create sequence seq_oidx
+increment by 1
+start with 1;
+
+create sequence seq_pidx
+increment by 1
+start with 1;
+
+create sequence seq_cidx
+increment by 1
+start with 1;
+
+create sequence seq_ridx
+increment by 1
+start with 1;
+
+create sequence seq_qidx
+increment by 1
+start with 1;
+
+create sequence seq_nidx
+increment by 1
+start with 1;
